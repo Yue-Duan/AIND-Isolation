@@ -178,12 +178,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
-        legal_moves = game.get_legal_moves()
-
-        if len(legal_moves):
-            best_move = legal_moves[0]
-        else:
-            return (-1, -1)
+        best_move = (-1, -1)
 
         try:
             # The try/except block will automatically catch the exception
@@ -238,14 +233,10 @@ class MinimaxPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        legal_moves = game.get_legal_moves()
-        if len(legal_moves):
-            best_move = legal_moves[0]
-        else:
-            return (-1, -1)
         best_score = float("-inf")
+        best_move = None
         for m in game.get_legal_moves():
-            v = self._min_val(game.forecast_move(m), depth - 1)
+            v = self._min_val(game.forecast_move(m), 1)
             if v > best_score:
                 best_score = v
                 best_move = m
@@ -256,27 +247,24 @@ class MinimaxPlayer(IsolationPlayer):
             raise SearchTimeout()
 
         legal_moves = game.get_legal_moves()
-        if len(legal_moves) == 0:
-            return float("inf")
-        if depth == 0:
-            return self.score(game, self)
+        if len(legal_moves) == 0 or depth >= self.search_depth:
+            # return float("-inf")
+            return self.score(game, game._inactive_player)
         v = float('inf')
         for m in legal_moves:
-            v = min(v, self._max_val(game.forecast_move(m), depth - 1))
+            v = min(v, self._max_val(game.forecast_move(m), depth + 1))
         return v
 
     def _max_val(self, game, depth):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
-
+        # depth += 1
         legal_moves = game.get_legal_moves()
-        if len(legal_moves) == 0:
-            return float('-inf')
-        if depth == 0:
-            return self.score(game, self)
+        if len(legal_moves) == 0 or depth >= self.search_depth:
+            return self.score(game, game._active_player)
         v = float('-inf')
         for m in legal_moves:
-            v = max(v, self._min_val(game.forecast_move(m), depth - 1))
+            v = max(v, self._min_val(game.forecast_move(m), depth + 1))
         return v
 
 

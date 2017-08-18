@@ -257,7 +257,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         legal_moves = game.get_legal_moves()
         if len(legal_moves) == 0:
-            return float("inf")
+            return float("-inf")
         if depth == 0:
             return self.score(game, self)
         v = float('inf')
@@ -271,7 +271,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         legal_moves = game.get_legal_moves()
         if len(legal_moves) == 0:
-            return float('-inf')
+            return float('inf')
         if depth == 0:
             return self.score(game, self)
         v = float('-inf')
