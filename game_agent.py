@@ -3,6 +3,7 @@ test your agent's strength against a set of known agents using tournament.py
 and include the results in your report.
 """
 import random
+import numpy as np
 
 
 class SearchTimeout(Exception):
@@ -42,7 +43,8 @@ def custom_score(game, player):
 
     moves = len(game.get_legal_moves())
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(moves - opp_moves)
+    move_diff = moves - opp_moves
+    return float(np.sign(move_diff) * (move_diff**2))
 
 
 def custom_score_2(game, player):
@@ -72,12 +74,13 @@ def custom_score_2(game, player):
 
     if game.is_winner(player):
         return float("inf")
-
+    moves = len(game.get_legal_moves())
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    
     w, h = game.width / 2., game.height / 2.
     y, x = game.get_player_location(player)
 
-    moves = len(game.get_legal_moves())
-    return float((h - y)**2 + (w - x)**2 + moves)
+    return float((h - y)**2 + (w - x)**2 + (moves - opp_moves))
 
 
 def custom_score_3(game, player):
