@@ -110,8 +110,13 @@ def custom_score_3(game, player):
 
     if game.is_winner(player):
         return float("inf")
+    
+    moves = len(game.get_legal_moves())
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    if opp_moves == 0:
+        return float("inf")
 
-    return float(random.randrange(-20, 20))
+    return float(1.0*moves/opp_moves)
 
 
 class IsolationPlayer:
